@@ -4,10 +4,10 @@ from app import app
 from flask_mysqldb import MySQL
 
 
-app.config['MYSQL_USER'] = 'b085c05e849089'
-app.config['MYSQL_PASSWORD'] = 'a4f7c93e'
+app.config['MYSQL_USER'] = 'bbc7c2522deece'
+app.config['MYSQL_PASSWORD'] = '8fdba964'
 app.config['MYSQL_DB'] = 'migospay'
-app.config['MYSQL_HOST'] = 'us-cdbr-east-06.cleardb.net'
+app.config['MYSQL_HOST'] = 'eu-cdbr-west-03.cleardb.net'
 
 mysql = MySQL(app)
 
