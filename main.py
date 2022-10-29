@@ -65,7 +65,7 @@ def create_user():
     fullname = "NULL"
     custID = "123456"
     cursor = mysql.connection.cursor()
-    cursor.execute('select * from accounts where email = %s', _email)
+    cursor.execute("select * from accounts where email = %s", _email)
     acc = cursor.fetchone()
     if acc:
         return jsonify({"message": "User exists, Please Login"})
