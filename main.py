@@ -71,7 +71,7 @@ def create_user():
         return jsonify({"message": "User exists, Please Login"})
     else:
         query = "insert into accounts (email,phone,fullname,password,custID) values (%s, %s,%s, %s,%s)"
-        bindData = (_email, _phone, _password, fullname, custID)
+        bindData = (_email, _phone, fullname, _password, custID)
         cursor.execute(query, bindData)
         mysql.connection.commit()
         cursor.close()
