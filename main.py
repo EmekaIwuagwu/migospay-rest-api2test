@@ -180,16 +180,7 @@ def show_transactions():
     response.status_code = 200
     return response
 
-@app.route("/api/show-virtual-accounts", methods=["GET"])
-@jwt_required()
-def show_virtualacc():
-    current_user = get_jwt_identity()
-    cursor = mysql.connection.cursor()
-    cursor.execute("select * from virtual_accounts where email = %s", [current_user])
-    userRows = cursor.fetchall()
-    response = jsonify({"data": userRows})
-    response.status_code = 200
-    return response
+
 
 
 
