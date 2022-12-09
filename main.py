@@ -32,6 +32,14 @@ def CreateDebitTransationDetails(date, email, narration, credit, debit):
     mysql.connection.commit()
     cursor.close()
 
+def saveVirtualAccount(email, account_number, bank_name):
+    cursor = mysql.connection.cursor()
+    query = "insert into virtual_accounts (email, account_number, bank_name) values (%s, %s, %s)"
+    bindData = (email, account_number, bank_name)
+    cursor.execute(query, bindData)
+    mysql.connection.commit()
+    cursor.close()
+
 
 @app.route("/api/login", methods=["POST"])
 def login_user():
@@ -159,6 +167,30 @@ def add_beneficiary():
     cursor.close()
     output = {"message": "ok"}
     return jsonify({"result": output}), 200
+
+
+@app.route("/api/show-transactions", methods=["GET"])
+@jwt_required()
+def show_transactions():
+    current_user = get_jwt_identity()
+    cursor = mysql.connection.cursor()
+    cursor.execute("select date, email, narration, credit, debit from transaction_details where email = %s", [current_user])
+    userRows = cursor.fetchall()
+    response = jsonify({"data": userRows})
+    response.status_code = 200
+    return response
+
+@app.route("/api/show-virtual-accounts", methods=["GET"])
+@jwt_required()
+def show_virtualacc():
+    current_user = get_jwt_identity()
+    cursor = mysql.connection.cursor()
+    cursor.execute("select * from virtual_accounts where email = %s", [current_user])
+    userRows = cursor.fetchall()
+    response = jsonify({"data": userRows})
+    response.status_code = 200
+    return response
+
 
 
 @app.route("/api/view_beneficiary", methods=["GET"])
