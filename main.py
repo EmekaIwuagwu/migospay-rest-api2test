@@ -51,7 +51,7 @@ def sendLoginNotificationEmail(from_mail, to_mail):
             """
     part2 = MIMEText(html, 'html')
     msg.attach(part2)
-    mail = smtplib.SMTP('smtp.gmail.com', 587)
+    mail = smtplib.SMTP('mail.migospay.com', 465)
     mail.ehlo()
 
     mail.starttls()
