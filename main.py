@@ -45,6 +45,35 @@ def saveVirtualAccount(email, account_number, bank_name):
     mysql.connection.commit()
     cursor.close()
 
+def SendLoginNotification(from_email, to_email):
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = "Login Notification"
+    msg['From'] = from_email
+    msg['To'] = to_email
+
+    html = """\
+                <html>
+                <head></head>
+                <body>
+                    <p>Hi!<br>
+                    How are you?<br>
+                    Here is the <a href="http://www.python.org">link</a> you wanted.
+                    </p>
+                </body>
+                </html>
+                """
+    part2 = MIMEText(html, 'html')
+    msg.attach(part2)
+    mail = smtplib.SMTP('mail.migospay.com', 465)
+    mail.ehlo()
+
+    mail.starttls()
+
+    mail.login('notification@migospay.com', 'EmekaIwuagwu87**')
+    mail.sendmail(from_email, to_email, msg.as_string())
+    mail.quit()
+
+
 
 @app.route("/api/login", methods=["POST"])
 def login_user():
@@ -60,6 +89,7 @@ def login_user():
     cursor.execute(query, bindData)
     acc = cursor.fetchone()
     if acc:
+        SendLoginNotification("notification@migospay.com",_email)
         access_token = create_access_token(identity=_email)
         success = access_token
     else:
