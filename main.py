@@ -89,7 +89,7 @@ def login_user():
     cursor.execute(query, bindData)
     acc = cursor.fetchone()
     if acc:
-        SendLoginNotification("notification@migospay.com",_email)
+        #SendLoginNotification("notification@migospay.com",_email)
         access_token = create_access_token(identity=_email)
         success = access_token
     else:
