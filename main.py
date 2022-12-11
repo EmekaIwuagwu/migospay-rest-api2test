@@ -27,40 +27,6 @@ def hello_world():
     return "Welcome to Migospay"
 
 
-def sendLoginNotificationEmail(from_mail, to_mail):
-    os_type = platform.system()
-    release_type = platform.release()
-    hostname = socket.gethostname()
-    ip = socket.gethostbyname(hostname)
-
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = "Link"
-    msg['From'] = from_mail
-    msg['To'] = to_mail
-
-    html = """\
-            <html>
-            <head></head>
-            <body>
-                <p>Hi!<br>
-                How are you?<br>
-                Here is the <a href="http://www.python.org">link</a> you wanted.
-                </p>
-            </body>
-            </html>
-            """
-    part2 = MIMEText(html, 'html')
-    msg.attach(part2)
-    mail = smtplib.SMTP('mail.migospay.com', 465)
-    mail.ehlo()
-
-    mail.starttls()
-
-    mail.login('notification@migospay.com', 'EmekaIwuagwu87**')
-    mail.sendmail(from_mail, to_mail, msg.as_string())
-    mail.quit()
-
-
 def CreateDebitTransationDetails(date, email, narration, credit, debit):
     # conn = mysql.connect()
     # cursor = conn.cursor(pymysql.cursors.DictCursor)
@@ -99,9 +65,6 @@ def login_user():
     else:
         return jsonify({"message": "Invalid username and password"}), 401
 
-    
-
-    sendLoginNotificationEmail("notification@migospay.com",_email)
     return jsonify({"token": success, "data": acc, "message": "ok"}), 200
 
 
