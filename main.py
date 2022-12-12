@@ -26,28 +26,9 @@ jwt = JWTManager(app)
 def hello_world():
     return "Welcome to Migospay"
 
-
-def CreateDebitTransationDetails(date, email, narration, credit, debit):
-    # conn = mysql.connect()
-    # cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor = mysql.connection.cursor()
-    query = "insert into transaction_details (date, email, narration, credit, debit) values (%s, %s, %s, %s, %s)"
-    bindData = (date, email, narration, credit, debit)
-    cursor.execute(query, bindData)
-    mysql.connection.commit()
-    cursor.close()
-
-def saveVirtualAccount(email, account_number, bank_name):
-    cursor = mysql.connection.cursor()
-    query = "insert into virtual_accounts (email, account_number, bank_name) values (%s, %s, %s)"
-    bindData = (email, account_number, bank_name)
-    cursor.execute(query, bindData)
-    mysql.connection.commit()
-    cursor.close()
-
-def SendLoginNotification(from_email, to_email):
+def SendTransactionNotification(from_email,to_email):
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = "Login Notification"
+    msg['Subject'] = "Transaction Notification"
     msg['From'] = from_email
     msg['To'] = to_email
 
@@ -75,6 +56,25 @@ def SendLoginNotification(from_email, to_email):
 
 
 
+def CreateDebitTransationDetails(date, email, narration, credit, debit):
+    # conn = mysql.connect()
+    # cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor = mysql.connection.cursor()
+    query = "insert into transaction_details (date, email, narration, credit, debit) values (%s, %s, %s, %s, %s)"
+    bindData = (date, email, narration, credit, debit)
+    cursor.execute(query, bindData)
+    mysql.connection.commit()
+    cursor.close()
+
+def saveVirtualAccount(email, account_number, bank_name):
+    cursor = mysql.connection.cursor()
+    query = "insert into virtual_accounts (email, account_number, bank_name) values (%s, %s, %s)"
+    bindData = (email, account_number, bank_name)
+    cursor.execute(query, bindData)
+    mysql.connection.commit()
+    cursor.close()
+
+
 @app.route("/api/login", methods=["POST"])
 def login_user():
     _json = request.json
@@ -89,7 +89,6 @@ def login_user():
     cursor.execute(query, bindData)
     acc = cursor.fetchone()
     if acc:
-        #SendLoginNotification("notification@migospay.com",_email)
         access_token = create_access_token(identity=_email)
         success = access_token
     else:
@@ -216,9 +215,6 @@ def show_transactions():
     return response
 
 
-
-
-
 @app.route("/api/view_beneficiary", methods=["GET"])
 @jwt_required()
 def view_beneficiary():
@@ -337,6 +333,7 @@ def create_local_transfer():
     today = str(date.today())
 
     CreateDebitTransationDetails(today, current_user, _narration, " ", _amount)
+    SendTransactionNotification("notification@migospay.com",current_user)
 
     return jsonify({"result": res.json()}), 200
 
