@@ -333,7 +333,7 @@ def create_local_transfer():
     today = str(date.today())
 
     CreateDebitTransationDetails(today, current_user, _narration, " ", _amount)
-    SendTransactionNotification("notification@migospay.com",current_user)
+    #SendTransactionNotification("notification@migospay.com",current_user)
 
     return jsonify({"result": res.json()}), 200
 
